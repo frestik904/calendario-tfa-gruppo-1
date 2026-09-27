@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TFA Sostegno · Gruppo 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -21,19 +24,42 @@
     --blue: #60a5fa;
   }
   body {
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
     padding: 16px;
     max-width: 1100px;
     margin: 0 auto;
     -webkit-text-size-adjust: 100%;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  header {
-    margin-bottom: 16px;
-  }
-  h1 { font-size: 22px; margin-bottom: 4px; }
+  header { margin-bottom: 16px; }
+  h1 { font-size: 22px; margin-bottom: 4px; letter-spacing: -0.02em; }
   .sub { color: var(--text-muted); font-size: 13px; }
+
+  /* Riepilogo ore */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .stat-value { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+  .stat-value small { font-size: 12px; font-weight: 500; color: var(--text-muted); }
 
   .highlight {
     background: var(--card);
@@ -86,7 +112,11 @@
     font-size: 13px;
     background: var(--card);
     color: var(--text);
+    font-family: inherit;
+    font-weight: 500;
+    transition: background 0.15s, border-color 0.15s;
   }
+  .filters button:hover { border-color: var(--text-muted); }
   .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
   .filters input {
     padding: 8px 14px;
@@ -97,7 +127,10 @@
     min-width: 140px;
     background: var(--card);
     color: var(--text);
+    font-family: inherit;
   }
+  .filters input::placeholder { color: var(--text-muted); }
+  .filters input:focus { outline: 2px solid var(--blue); outline-offset: -1px; }
 
   table {
     width: 100%;
@@ -131,9 +164,44 @@
     font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
   .badge.online { background: #064e3b; color: #6ee7b7; }
   .badge.presenza { background: #1e3a8a; color: #93c5fd; }
+
+  .badge-oggi {
+    background: var(--today-border);
+    color: #422006;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .month-header {
+    background: var(--bg);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    border-bottom: 2px solid var(--blue);
+  }
+  .month-header td {
+    background: var(--bg);
+    border-top: none;
+    padding: 10px 12px;
+  }
 
   .footer {
     text-align: center;
@@ -143,17 +211,22 @@
   }
   .count { color: var(--text-muted); font-size: 12px; margin-top: 8px; }
 
-  /* 📱 MOBILE: trasformo la tabella in card */
+  /* 📱 MOBILE */
   @media (max-width: 700px) {
     body { padding: 12px; }
     h1 { font-size: 19px; }
     .sub { font-size: 12px; }
 
+    .stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat { padding: 10px; }
+    .stat-value { font-size: 16px; }
+    .stat-label { font-size: 9px; }
+
     table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; } /* nascondo l'intestazione */
+    thead { display: none; }
     table { background: transparent; box-shadow: none; border-radius: 0; }
 
-    tr {
+    tr.materia, tr.today {
       background: var(--card);
       border-radius: 12px;
       margin-bottom: 10px;
@@ -183,7 +256,6 @@
       font-weight: 600;
       flex-shrink: 0;
     }
-    /* La data diventa il titolo della card */
     td[data-label="Data"] {
       font-size: 15px;
       font-weight: 700;
@@ -194,13 +266,32 @@
       justify-content: flex-start;
     }
     td[data-label="Data"]::before { display: none; }
-    /* L'insegnamento è il testo principale */
     td[data-label="Insegnamento"] {
       font-weight: 600;
       justify-content: flex-start;
       text-align: left;
     }
     td[data-label="Insegnamento"]::before { display: none; }
+
+    tr.month-header {
+      background: transparent;
+      border: none;
+      padding: 16px 0 6px;
+      margin: 0;
+      border-left: none;
+    }
+    tr.month-header td {
+      background: transparent;
+      padding: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: block;
+      text-align: left;
+    }
+    tr.month-header td::before { display: none; }
   }
 </style>
 </head>
@@ -209,6 +300,8 @@
     <h1>TFA Sostegno · Gruppo 1</h1>
     <p class="sub">XI Ciclo · a.a. 2025/2026 · Secondaria II grado · UNICT</p>
   </header>
+
+  <div class="stats" id="stats"></div>
 
   <div class="highlight" id="next-lesson"></div>
 
@@ -315,6 +408,12 @@ const MATERIE = {
   "Seminario": { label: "Seminario", color: "#64748b" },
 };
 
+const MESI = {
+  "10": "Ottobre", "11": "Novembre", "12": "Dicembre", "01": "Gennaio",
+  "02": "Febbraio", "03": "Marzo", "04": "Aprile", "05": "Maggio",
+  "06": "Giugno", "07": "Luglio", "08": "Agosto", "09": "Settembre"
+};
+
 function getMateria(subject) {
   for (const key of Object.keys(MATERIE)) {
     if (subject.startsWith(key)) return key;
@@ -339,7 +438,37 @@ function getGiorno(dateStr) {
   return ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][date.getDay()];
 }
 
+function durataOre(start, end) {
+  const [sh, sm] = start.split(":").map(Number);
+  const [eh, em] = end.split(":").map(Number);
+  return (eh * 60 + em - sh * 60 - sm) / 60;
+}
+
 const events = parseCSV(csvData).map(e => ({ ...e, giorno: getGiorno(e["Start Date"]) }));
+
+// Riepilogo ore
+function renderStats() {
+  const totale = events.reduce((s, e) => s + durataOre(e["Start Time"], e["End Time"]), 0);
+  const online = events
+    .filter(e => e.Description?.toLowerCase().includes("online"))
+    .reduce((s, e) => s + durataOre(e["Start Time"], e["End Time"]), 0);
+  const presenza = totale - online;
+
+  document.getElementById("stats").innerHTML = `
+    <div class="stat">
+      <div class="stat-label">Ore totali</div>
+      <div class="stat-value">${totale.toFixed(0)}<small> h</small></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">In presenza</div>
+      <div class="stat-value">${presenza.toFixed(0)}<small> h</small></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Online</div>
+      <div class="stat-value">${online.toFixed(0)}<small> h</small></div>
+    </div>
+  `;
+}
 
 function renderLegend() {
   const legend = document.getElementById("legend");
@@ -402,26 +531,39 @@ function render() {
     return matchFilter && matchSearch;
   });
 
-  tbody.innerHTML = filtered.map(e => {
+  // Raggruppa per mese
+  let html = "";
+  let lastMonth = "";
+  filtered.forEach(e => {
+    const [, m, y] = e["Start Date"].split("/");
+    const monthKey = `${m}/${y}`;
+    if (monthKey !== lastMonth) {
+      html += `<tr class="month-header"><td colspan="5">${MESI[m] || m} ${y}</td></tr>`;
+      lastMonth = monthKey;
+    }
     const isToday = e["Start Date"] === todayStr;
     const isOnline = e.Description?.toLowerCase().includes("online");
     const materia = MATERIE[getMateria(e.Subject)];
-    return `
+    html += `
       <tr class="${isToday ? "today" : "materia"}" style="--row-color:${materia.color}">
-        <td data-label="Data">${e["Start Date"]}${isToday ? " · <strong>oggi</strong>" : ""}</td>
+        <td data-label="Data">${e["Start Date"]}${isToday ? '<span class="badge-oggi">Oggi</span>' : ""}</td>
         <td data-label="Giorno">${e.giorno}</td>
         <td data-label="Ora">${e["Start Time"]}–${e["End Time"]}</td>
         <td data-label="Insegnamento">${e.Subject}</td>
-        <td data-label="Modalità"><span class="badge ${isOnline ? "online" : "presenza"}">${e.Description || "—"}</span></td>
+        <td data-label="Modalità"><span class="badge ${isOnline ? "online" : "presenza"}">${isOnline ? "💻" : "🏫"} ${e.Description || "—"}</span></td>
       </tr>
     `;
-  }).join("") || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">Nessuna lezione trovata.</td></tr>`;
+  });
+
+  tbody.innerHTML = html || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">Nessuna lezione trovata.</td></tr>`;
 
   document.getElementById("count").textContent = `${filtered.length} lezioni su ${events.length} totali`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  renderStats();
   renderLegend();
+  renderNext();
 
   document.querySelectorAll(".filters button").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -437,7 +579,6 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   });
 
-  renderNext();
   render();
 });
 </script>

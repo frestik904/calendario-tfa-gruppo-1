@@ -7,26 +7,12 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #fafaf9;
-    --card: #ffffff;
-    --text: #1e293b;
-    --text-muted: #64748b;
-    --border: #f1f5f9;
-    --header-bg: #f1f5f9;
-    --hover: #f8fafc;
-    --accent: #0f172a;
-    --accent-text: #ffffff;
-    --today: #fef9c3;
-    --today-border: #facc15;
-    --blue: #3b82f6;
-  }
-  body.dark {
     --bg: #0f172a;
     --card: #1e293b;
     --text: #f1f5f9;
     --text-muted: #94a3b8;
     --border: #334155;
-    --header-bg: #334155;
+    --header-bg: #1e293b;
     --hover: #334155;
     --accent: #f1f5f9;
     --accent-text: #0f172a;
@@ -41,7 +27,6 @@
     padding: 20px;
     max-width: 1100px;
     margin: 0 auto;
-    transition: background 0.2s, color 0.2s;
   }
   header {
     display: flex;
@@ -53,17 +38,6 @@
   }
   h1 { font-size: 24px; margin-bottom: 4px; }
   .sub { color: var(--text-muted); font-size: 14px; }
-  #theme-toggle {
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  #theme-toggle:hover { background: var(--hover); }
 
   .highlight {
     background: var(--card);
@@ -111,13 +85,13 @@
   .filters button {
     padding: 8px 16px;
     border-radius: 999px;
-    border: none;
+    border: 1px solid var(--border);
     cursor: pointer;
     font-size: 14px;
-    background: var(--border);
+    background: var(--card);
     color: var(--text);
   }
-  .filters button.active { background: var(--accent); color: var(--accent-text); }
+  .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
   .filters input {
     padding: 8px 16px;
     border-radius: 999px;
@@ -135,7 +109,7 @@
     background: var(--card);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     font-size: 14px;
   }
   th {
@@ -147,6 +121,7 @@
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--border);
   }
   td { padding: 12px; border-top: 1px solid var(--border); }
   tr:hover { background: var(--hover); }
@@ -161,10 +136,8 @@
     font-weight: 500;
     white-space: nowrap;
   }
-  .badge.online { background: #d1fae5; color: #047857; }
-  .badge.presenza { background: #dbeafe; color: #1d4ed8; }
-  body.dark .badge.online { background: #064e3b; color: #6ee7b7; }
-  body.dark .badge.presenza { background: #1e3a8a; color: #93c5fd; }
+  .badge.online { background: #064e3b; color: #6ee7b7; }
+  .badge.presenza { background: #1e3a8a; color: #93c5fd; }
 
   .footer {
     text-align: center;
@@ -181,7 +154,6 @@
       <h1>TFA Sostegno · Gruppo 1</h1>
       <p class="sub">XI Ciclo · a.a. 2025/2026 · Secondaria II grado · UNICT</p>
     </div>
-    <button id="theme-toggle">🌙 Tema scuro</button>
   </header>
 
   <div class="highlight" id="next-lesson"></div>
@@ -279,7 +251,6 @@ Seminario,23/01/2027,14:30,23/01/2027,19:30,Presenza,
 Seminario,29/01/2027,15:00,29/01/2027,20:00,Presenza,
 Seminario,30/01/2027,09:00,30/01/2027,14:00,Presenza`;
 
-// Colori per materia
 const MATERIE = {
   "M-PED/03": { label: "M-PED/03 · Pedagogia speciale", color: "#f59e0b" },
   "M-PSI/04": { label: "M-PSI/04 · Psicologia", color: "#8b5cf6" },
@@ -411,19 +382,6 @@ document.addEventListener("DOMContentLoaded", () => {
     currentSearch = e.target.value;
     render();
   });
-
-  const themeBtn = document.getElementById("theme-toggle");
-  function applyTheme() {
-    const dark = localStorage.getItem("tfa_dark") === "1";
-    document.body.classList.toggle("dark", dark);
-    themeBtn.textContent = dark ? "☀️ Tema chiaro" : "🌙 Tema scuro";
-  }
-  themeBtn.addEventListener("click", () => {
-    const dark = !document.body.classList.contains("dark");
-    localStorage.setItem("tfa_dark", dark ? "1" : "0");
-    applyTheme();
-  });
-  applyTheme();
 
   renderNext();
   render();

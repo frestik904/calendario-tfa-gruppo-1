@@ -83,6 +83,25 @@
   .highlight-title { font-size: 16px; font-weight: 600; }
   .highlight-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
   .filters {
     display: flex;
     gap: 8px;
@@ -133,6 +152,7 @@
   tr:hover { background: var(--hover); }
   tr.today { background: var(--today); }
   tr.today td:first-child { border-left: 4px solid var(--today-border); }
+  tr.materia td:first-child { border-left: 4px solid var(--row-color); }
 
   .badge {
     padding: 3px 10px;
@@ -165,6 +185,8 @@
   </header>
 
   <div class="highlight" id="next-lesson"></div>
+
+  <div class="legend" id="legend"></div>
 
   <div class="filters">
     <button class="active" data-filter="all">Tutte</button>
@@ -257,6 +279,24 @@ Seminario,23/01/2027,14:30,23/01/2027,19:30,Presenza,
 Seminario,29/01/2027,15:00,29/01/2027,20:00,Presenza,
 Seminario,30/01/2027,09:00,30/01/2027,14:00,Presenza`;
 
+// Colori per materia
+const MATERIE = {
+  "M-PED/03": { label: "M-PED/03 · Pedagogia speciale", color: "#f59e0b" },
+  "M-PSI/04": { label: "M-PSI/04 · Psicologia", color: "#8b5cf6" },
+  "M-PED/04": { label: "M-PED/04 · Didattica sensoriale", color: "#ec4899" },
+  "MED/39":   { label: "MED/39 · Neuropsichiatria", color: "#ef4444" },
+  "IUS/09":   { label: "IUS/09 · Legislazione", color: "#06b6d4" },
+  "M-PED/01": { label: "M-PED/01 · Relazione di aiuto", color: "#10b981" },
+  "Seminario": { label: "Seminario", color: "#64748b" },
+};
+
+function getMateria(subject) {
+  for (const key of Object.keys(MATERIE)) {
+    if (subject.startsWith(key)) return key;
+  }
+  return "Seminario";
+}
+
 function parseCSV(text) {
   const lines = text.trim().split("\n");
   const headers = lines[0].split(",");
@@ -275,6 +315,16 @@ function getGiorno(dateStr) {
 }
 
 const events = parseCSV(csvData).map(e => ({ ...e, giorno: getGiorno(e["Start Date"]) }));
+
+function renderLegend() {
+  const legend = document.getElementById("legend");
+  legend.innerHTML = Object.values(MATERIE).map(m => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${m.color}"></span>
+      <span>${m.label}</span>
+    </div>
+  `).join("");
+}
 
 function renderNext() {
   const now = new Date();
@@ -295,8 +345,10 @@ function renderNext() {
   const oggi = new Date();
   const todayStr = `${String(oggi.getDate()).padStart(2,"0")}/${String(oggi.getMonth()+1).padStart(2,"0")}/${oggi.getFullYear()}`;
   const isToday = prossima["Start Date"] === todayStr;
+  const materia = MATERIE[getMateria(prossima.Subject)];
+  box.style.borderColor = materia.color;
   box.innerHTML = `
-    <div class="highlight-label">Prossima lezione${isToday ? " · Oggi" : ""}</div>
+    <div class="highlight-label" style="color:${materia.color}">Prossima lezione${isToday ? " · Oggi" : ""}</div>
     <div class="highlight-title">${prossima.Subject}</div>
     <div class="highlight-meta">${prossima["Start Date"]} · ${prossima["Start Time"]}–${prossima["End Time"]} · ${prossima.Description}</div>
   `;
@@ -328,8 +380,9 @@ function render() {
   tbody.innerHTML = filtered.map(e => {
     const isToday = e["Start Date"] === todayStr;
     const isOnline = e.Description?.toLowerCase().includes("online");
+    const materia = MATERIE[getMateria(e.Subject)];
     return `
-      <tr class="${isToday ? "today" : ""}">
+      <tr class="${isToday ? "today" : "materia"}" style="--row-color:${materia.color}">
         <td>${e["Start Date"]}${isToday ? " · <strong>oggi</strong>" : ""}</td>
         <td>${e.giorno}</td>
         <td>${e["Start Time"]}–${e["End Time"]}</td>
@@ -342,9 +395,9 @@ function render() {
   document.getElementById("count").textContent = `${filtered.length} lezioni su ${events.length} totali`;
 }
 
-// Inizializzazione dopo che il DOM è pronto
 document.addEventListener("DOMContentLoaded", () => {
-  // Filtri
+  renderLegend();
+
   document.querySelectorAll(".filters button").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
@@ -359,7 +412,6 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   });
 
-  // Tema scuro
   const themeBtn = document.getElementById("theme-toggle");
   function applyTheme() {
     const dark = localStorage.getItem("tfa_dark") === "1";
@@ -373,7 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   applyTheme();
 
-  // Render iniziale
   renderNext();
   render();
 });

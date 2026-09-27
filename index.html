@@ -24,27 +24,23 @@
     font-family: system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 20px;
+    padding: 16px;
     max-width: 1100px;
     margin: 0 auto;
+    -webkit-text-size-adjust: 100%;
   }
   header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
-  h1 { font-size: 24px; margin-bottom: 4px; }
-  .sub { color: var(--text-muted); font-size: 14px; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: var(--text-muted); font-size: 13px; }
 
   .highlight {
     background: var(--card);
     border: 2px solid var(--blue);
     border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
   }
   .highlight-label {
     font-size: 11px;
@@ -54,24 +50,24 @@
     font-weight: 700;
     margin-bottom: 4px;
   }
-  .highlight-title { font-size: 16px; font-weight: 600; }
-  .highlight-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .highlight-title { font-size: 15px; font-weight: 600; }
+  .highlight-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
   .legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding: 12px 16px;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
     background: var(--card);
     border-radius: 12px;
     border: 1px solid var(--border);
-    font-size: 13px;
+    font-size: 12px;
   }
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 999px;
     flex-shrink: 0;
   }
@@ -80,25 +76,25 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .filters button {
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 999px;
     border: 1px solid var(--border);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     background: var(--card);
     color: var(--text);
   }
   .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
   .filters input {
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 999px;
     border: 1px solid var(--border);
-    font-size: 14px;
+    font-size: 13px;
     flex: 1;
-    min-width: 180px;
+    min-width: 140px;
     background: var(--card);
     color: var(--text);
   }
@@ -118,7 +114,7 @@
     padding: 12px;
     color: var(--text-muted);
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     border-bottom: 1px solid var(--border);
@@ -143,17 +139,75 @@
     text-align: center;
     color: var(--text-muted);
     font-size: 12px;
-    margin-top: 30px;
+    margin-top: 24px;
   }
-  .count { color: var(--text-muted); font-size: 13px; margin-top: 8px; }
+  .count { color: var(--text-muted); font-size: 12px; margin-top: 8px; }
+
+  /* 📱 MOBILE: trasformo la tabella in card */
+  @media (max-width: 700px) {
+    body { padding: 12px; }
+    h1 { font-size: 19px; }
+    .sub { font-size: 12px; }
+
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; } /* nascondo l'intestazione */
+    table { background: transparent; box-shadow: none; border-radius: 0; }
+
+    tr {
+      background: var(--card);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--row-color, var(--border));
+      position: relative;
+    }
+    tr.today { border-left-color: var(--today-border); background: var(--today); }
+    tr:hover { background: var(--card); }
+
+    td {
+      border: none;
+      padding: 3px 0;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    td::before {
+      content: attr(data-label);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    /* La data diventa il titolo della card */
+    td[data-label="Data"] {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      justify-content: flex-start;
+    }
+    td[data-label="Data"]::before { display: none; }
+    /* L'insegnamento è il testo principale */
+    td[data-label="Insegnamento"] {
+      font-weight: 600;
+      justify-content: flex-start;
+      text-align: left;
+    }
+    td[data-label="Insegnamento"]::before { display: none; }
+  }
 </style>
 </head>
 <body>
   <header>
-    <div>
-      <h1>TFA Sostegno · Gruppo 1</h1>
-      <p class="sub">XI Ciclo · a.a. 2025/2026 · Secondaria II grado · UNICT</p>
-    </div>
+    <h1>TFA Sostegno · Gruppo 1</h1>
+    <p class="sub">XI Ciclo · a.a. 2025/2026 · Secondaria II grado · UNICT</p>
   </header>
 
   <div class="highlight" id="next-lesson"></div>
@@ -354,11 +408,11 @@ function render() {
     const materia = MATERIE[getMateria(e.Subject)];
     return `
       <tr class="${isToday ? "today" : "materia"}" style="--row-color:${materia.color}">
-        <td>${e["Start Date"]}${isToday ? " · <strong>oggi</strong>" : ""}</td>
-        <td>${e.giorno}</td>
-        <td>${e["Start Time"]}–${e["End Time"]}</td>
-        <td>${e.Subject}</td>
-        <td><span class="badge ${isOnline ? "online" : "presenza"}">${e.Description || "—"}</span></td>
+        <td data-label="Data">${e["Start Date"]}${isToday ? " · <strong>oggi</strong>" : ""}</td>
+        <td data-label="Giorno">${e.giorno}</td>
+        <td data-label="Ora">${e["Start Time"]}–${e["End Time"]}</td>
+        <td data-label="Insegnamento">${e.Subject}</td>
+        <td data-label="Modalità"><span class="badge ${isOnline ? "online" : "presenza"}">${e.Description || "—"}</span></td>
       </tr>
     `;
   }).join("") || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">Nessuna lezione trovata.</td></tr>`;

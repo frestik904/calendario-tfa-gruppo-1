@@ -37,30 +37,6 @@
   h1 { font-size: 22px; margin-bottom: 4px; letter-spacing: -0.02em; }
   .sub { color: var(--text-muted); font-size: 13px; }
 
-  /* Riepilogo ore */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .stat {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
-  }
-  .stat-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .stat-value { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-  .stat-value small { font-size: 12px; font-weight: 500; color: var(--text-muted); }
-
   .highlight {
     background: var(--card);
     border: 2px solid var(--blue);
@@ -217,11 +193,6 @@
     h1 { font-size: 19px; }
     .sub { font-size: 12px; }
 
-    .stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .stat { padding: 10px; }
-    .stat-value { font-size: 16px; }
-    .stat-label { font-size: 9px; }
-
     table, thead, tbody, th, td, tr { display: block; }
     thead { display: none; }
     table { background: transparent; box-shadow: none; border-radius: 0; }
@@ -298,10 +269,8 @@
 <body>
   <header>
     <h1>TFA Sostegno · Gruppo 1</h1>
-    <p class="sub">XI Ciclo · a.a. 2025/2026 · Secondaria II grado · UNICT</p>
+    <p class="sub">XI Ciclo · a.a. 2026/2027 · Secondaria II grado · UNICT</p>
   </header>
-
-  <div class="stats" id="stats"></div>
 
   <div class="highlight" id="next-lesson"></div>
 
@@ -438,37 +407,7 @@ function getGiorno(dateStr) {
   return ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][date.getDay()];
 }
 
-function durataOre(start, end) {
-  const [sh, sm] = start.split(":").map(Number);
-  const [eh, em] = end.split(":").map(Number);
-  return (eh * 60 + em - sh * 60 - sm) / 60;
-}
-
 const events = parseCSV(csvData).map(e => ({ ...e, giorno: getGiorno(e["Start Date"]) }));
-
-// Riepilogo ore
-function renderStats() {
-  const totale = events.reduce((s, e) => s + durataOre(e["Start Time"], e["End Time"]), 0);
-  const online = events
-    .filter(e => e.Description?.toLowerCase().includes("online"))
-    .reduce((s, e) => s + durataOre(e["Start Time"], e["End Time"]), 0);
-  const presenza = totale - online;
-
-  document.getElementById("stats").innerHTML = `
-    <div class="stat">
-      <div class="stat-label">Ore totali</div>
-      <div class="stat-value">${totale.toFixed(0)}<small> h</small></div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">In presenza</div>
-      <div class="stat-value">${presenza.toFixed(0)}<small> h</small></div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Online</div>
-      <div class="stat-value">${online.toFixed(0)}<small> h</small></div>
-    </div>
-  `;
-}
 
 function renderLegend() {
   const legend = document.getElementById("legend");
@@ -531,7 +470,6 @@ function render() {
     return matchFilter && matchSearch;
   });
 
-  // Raggruppa per mese
   let html = "";
   let lastMonth = "";
   filtered.forEach(e => {
@@ -561,7 +499,6 @@ function render() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderStats();
   renderLegend();
   renderNext();
 

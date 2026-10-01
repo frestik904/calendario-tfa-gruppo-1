@@ -88,9 +88,7 @@
     padding: 4px 16px 16px;
     border-top: 1px solid var(--border);
   }
-  .info-section {
-    margin-top: 14px;
-  }
+  .info-section { margin-top: 14px; }
   .info-section:first-child { margin-top: 10px; }
   .info-section h3 {
     font-size: 12px;
@@ -99,36 +97,12 @@
     color: var(--text-muted);
     font-weight: 700;
     margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
   }
-  .info-section p {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--text);
-  }
-  .info-section ul {
-    list-style: none;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text);
-  }
-  .info-section ul li {
-    padding-left: 14px;
-    position: relative;
-  }
-  .info-section ul li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: var(--blue);
-  }
-  .info-section a {
-    color: var(--blue);
-    text-decoration: none;
-    word-break: break-all;
-  }
+  .info-section p { font-size: 13px; line-height: 1.5; color: var(--text); }
+  .info-section ul { list-style: none; font-size: 13px; line-height: 1.6; color: var(--text); }
+  .info-section ul li { padding-left: 14px; position: relative; }
+  .info-section ul li::before { content: "•"; position: absolute; left: 0; color: var(--blue); }
+  .info-section a { color: var(--blue); text-decoration: none; word-break: break-all; }
   .info-section a:hover { text-decoration: underline; }
   .info-section .highlight-text {
     background: rgba(96, 165, 250, 0.1);
@@ -381,18 +355,14 @@
     </div>
     <div class="info-content">
       <div class="info-inner">
-
         <div class="info-section">
           <h3>🏫 Sede delle lezioni</h3>
-          <p>Dipartimento di Matematica, <strong>aula 3</strong><br>
-          Ingresso ovest, via S. Sofia n. 64</p>
+          <p>Dipartimento di Matematica, <strong>aula 3</strong><br>Ingresso ovest, via S. Sofia n. 64</p>
         </div>
-
         <div class="info-section">
           <h3>📧 Email del gruppo</h3>
           <p><a href="mailto:sssecondogradogruppo1@gmail.com">sssecondogradogruppo1@gmail.com</a></p>
         </div>
-
         <div class="info-section">
           <h3>📊 Assenze (Area Comune)</h3>
           <p>Massimo <strong>20% di assenze</strong> per ogni insegnamento:</p>
@@ -401,11 +371,8 @@
             <li>22h 30m → massimo 4h 30m</li>
             <li>7h 30m → massimo 1h 30m</li>
           </ul>
-          <div class="highlight-text">
-            Entro questi limiti, il recupero è assegnato dal docente. Oltre, il recupero si svolge prima della fine del corso con un altro docente.
-          </div>
+          <div class="highlight-text">Entro questi limiti, il recupero è assegnato dal docente. Oltre, il recupero si svolge prima della fine del corso con un altro docente.</div>
         </div>
-
         <div class="info-section">
           <h3>📝 Giustificativi di presenza</h3>
           <p>Richiedere <strong>dopo</strong> la lezione, inviando una mail con:</p>
@@ -415,16 +382,12 @@
             <li>Data per cui si richiede l'attestato</li>
             <li>Nome del docente che ha svolto l'insegnamento</li>
           </ul>
-          <div class="highlight-text">
-            Senza questi dati, la richiesta non può essere evasa.
-          </div>
+          <div class="highlight-text">Senza questi dati, la richiesta non può essere evasa.</div>
         </div>
-
         <div class="info-section">
           <h3>🔗 Avvisi DISFOR</h3>
           <p><a href="https://www.disfor.unict.it/corsi/sostegno/avvisi" target="_blank" rel="noopener">disfor.unict.it/corsi/sostegno/avvisi</a></p>
         </div>
-
       </div>
     </div>
   </div>
@@ -670,4 +633,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   infoHeader.addEventListener("click", () => {
     const open = !infoBox.classList.contains("open");
-   
+    infoBox.classList.toggle("open", open);
+    infoToggleText.textContent = open ? "Nascondi" : "Mostra";
+    localStorage.setItem("tfa_info_open", open ? "1" : "0");
+  });
+
+  applyInfoState();
+
+  document.querySelectorAll(".filters button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentFilter = btn.dataset.filter

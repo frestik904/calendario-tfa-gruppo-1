@@ -37,7 +37,6 @@
   h1 { font-size: 22px; margin-bottom: 4px; letter-spacing: -0.02em; }
   .sub { color: var(--text-muted); font-size: 13px; }
 
-  /* Info utili */
   .info-box {
     background: var(--card);
     border: 1px solid var(--border);
@@ -257,7 +256,6 @@
 
   .count { color: var(--text-muted); font-size: 12px; margin-top: 8px; }
 
-  /* 📱 MOBILE */
   @media (max-width: 700px) {
     body { padding: 12px; }
     h1 { font-size: 19px; }
@@ -620,7 +618,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderLegend();
   renderNext();
 
-  // Info utili: apertura/chiusura con salvataggio stato
   const infoBox = document.getElementById("info-box");
   const infoHeader = document.getElementById("info-header");
   const infoToggleText = document.getElementById("info-toggle-text");
@@ -644,4 +641,18 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      currentFilter = btn.dataset.filter
+      currentFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  document.getElementById("search").addEventListener("input", e => {
+    currentSearch = e.target.value;
+    render();
+  });
+
+  render();
+});
+</script>
+</body>
+</html>

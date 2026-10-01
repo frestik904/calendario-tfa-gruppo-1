@@ -37,6 +37,81 @@
   h1 { font-size: 22px; margin-bottom: 4px; letter-spacing: -0.02em; }
   .sub { color: var(--text-muted); font-size: 13px; }
 
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .info-header:hover { background: var(--hover); }
+  .info-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .info-title .icon { font-size: 16px; }
+  .info-toggle {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .info-toggle .chevron {
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+  .info-box.open .info-toggle .chevron { transform: rotate(180deg); }
+  .info-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .info-box.open .info-content { max-height: 1200px; }
+  .info-inner {
+    padding: 4px 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .info-section { margin-top: 14px; }
+  .info-section:first-child { margin-top: 10px; }
+  .info-section h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .info-section p { font-size: 13px; line-height: 1.5; color: var(--text); }
+  .info-section ul { list-style: none; font-size: 13px; line-height: 1.6; color: var(--text); }
+  .info-section ul li { padding-left: 14px; position: relative; }
+  .info-section ul li::before { content: "•"; position: absolute; left: 0; color: var(--blue); }
+  .info-section a { color: var(--blue); text-decoration: none; word-break: break-all; }
+  .info-section a:hover { text-decoration: underline; }
+  .info-section .highlight-text {
+    background: rgba(96, 165, 250, 0.1);
+    border-left: 3px solid var(--blue);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+
   .highlight {
     background: var(--card);
     border: 2px solid var(--blue);
@@ -181,7 +256,6 @@
 
   .count { color: var(--text-muted); font-size: 12px; margin-top: 8px; }
 
-  /* 📱 MOBILE */
   @media (max-width: 700px) {
     body { padding: 12px; }
     h1 { font-size: 19px; }
@@ -265,6 +339,56 @@
     <h1>TFA Sostegno · Gruppo 1</h1>
     <p class="sub">XI Ciclo · a.a. 2026/2027 · Secondaria II grado · UNICT</p>
   </header>
+
+  <div class="info-box" id="info-box">
+    <div class="info-header" id="info-header">
+      <div class="info-title">
+        <span class="icon">ℹ️</span>
+        <span>Info utili</span>
+      </div>
+      <div class="info-toggle">
+        <span id="info-toggle-text">Mostra</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="info-content">
+      <div class="info-inner">
+        <div class="info-section">
+          <h3>🏫 Sede delle lezioni</h3>
+          <p>Dipartimento di Matematica, <strong>aula 3</strong><br>Ingresso ovest, via S. Sofia n. 64</p>
+        </div>
+        <div class="info-section">
+          <h3>📧 Email del gruppo</h3>
+          <p><a href="mailto:sssecondogradogruppo1@gmail.com">sssecondogradogruppo1@gmail.com</a></p>
+        </div>
+        <div class="info-section">
+          <h3>📊 Assenze (Area Comune)</h3>
+          <p>Massimo <strong>20% di assenze</strong> per ogni insegnamento:</p>
+          <ul>
+            <li>30 ore → massimo 6 h</li>
+            <li>22h 30m → massimo 4h 30m</li>
+            <li>7h 30m → massimo 1h 30m</li>
+          </ul>
+          <div class="highlight-text">Entro questi limiti, il recupero è assegnato dal docente. Oltre, il recupero si svolge prima della fine del corso con un altro docente.</div>
+        </div>
+        <div class="info-section">
+          <h3>📝 Giustificativi di presenza</h3>
+          <p>Richiedere <strong>dopo</strong> la lezione, inviando una mail con:</p>
+          <ul>
+            <li>Nome e cognome del corsista</li>
+            <li>Ordine, grado e gruppo di appartenenza</li>
+            <li>Data per cui si richiede l'attestato</li>
+            <li>Nome del docente che ha svolto l'insegnamento</li>
+          </ul>
+          <div class="highlight-text">Senza questi dati, la richiesta non può essere evasa.</div>
+        </div>
+        <div class="info-section">
+          <h3>🔗 Avvisi DISFOR</h3>
+          <p><a href="https://www.disfor.unict.it/corsi/sostegno/avvisi" target="_blank" rel="noopener">disfor.unict.it/corsi/sostegno/avvisi</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="highlight" id="next-lesson"></div>
 
@@ -493,6 +617,25 @@ function render() {
 document.addEventListener("DOMContentLoaded", () => {
   renderLegend();
   renderNext();
+
+  const infoBox = document.getElementById("info-box");
+  const infoHeader = document.getElementById("info-header");
+  const infoToggleText = document.getElementById("info-toggle-text");
+
+  function applyInfoState() {
+    const open = localStorage.getItem("tfa_info_open") === "1";
+    infoBox.classList.toggle("open", open);
+    infoToggleText.textContent = open ? "Nascondi" : "Mostra";
+  }
+
+  infoHeader.addEventListener("click", () => {
+    const open = !infoBox.classList.contains("open");
+    infoBox.classList.toggle("open", open);
+    infoToggleText.textContent = open ? "Nascondi" : "Mostra";
+    localStorage.setItem("tfa_info_open", open ? "1" : "0");
+  });
+
+  applyInfoState();
 
   document.querySelectorAll(".filters button").forEach(btn => {
     btn.addEventListener("click", () => {

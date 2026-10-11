@@ -154,6 +154,7 @@
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 14px;
+    align-items: center;
   }
   .filters button {
     padding: 8px 14px;
@@ -169,6 +170,18 @@
   }
   .filters button:hover { border-color: var(--text-muted); }
   .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  /* Toggle "Mostra passate": stile distinto, sempre presente ma con stato on/off */
+  .filters button.toggle-past {
+    border-style: dashed;
+    color: var(--text-muted);
+  }
+  .filters button.toggle-past:hover { color: var(--text); }
+  .filters button.toggle-past.on {
+    background: rgba(96, 165, 250, 0.15);
+    border-color: var(--blue);
+    border-style: solid;
+    color: var(--blue);
+  }
   .filters input {
     padding: 8px 14px;
     border-radius: 999px;
@@ -399,6 +412,7 @@
     <button data-filter="presenza">In presenza</button>
     <button data-filter="online">Online</button>
     <button data-filter="month">Questo mese</button>
+    <button id="toggle-past" class="toggle-past" type="button" aria-pressed="false">Mostra passate</button>
     <input type="text" id="search" placeholder="Cerca insegnamento...">
   </div>
 
@@ -522,6 +536,18 @@ function getGiorno(dateStr) {
   return ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][date.getDay()];
 }
 
+// Restituisce la data (senza ora) di una lezione, per confronti "giornalieri"
+function getDateOnly(dateStr) {
+  const [d, m, y] = dateStr.split("/");
+  return new Date(`${y}-${m}-${d}T00:00:00`);
+}
+
+// Restituisce la data (senza ora) di oggi
+function getTodayDateOnly() {
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+
 const events = parseCSV(csvData).map(e => ({ ...e, giorno: getGiorno(e["Start Date"]) }));
 
 function renderLegend() {
@@ -564,11 +590,16 @@ function renderNext() {
 
 let currentFilter = "all";
 let currentSearch = "";
+let showPast = false; // <-- le passate sono nascoste di default
 
 function render() {
   const tbody = document.getElementById("tbody");
   const now = new Date();
   const todayStr = `${String(now.getDate()).padStart(2,"0")}/${String(now.getMonth()+1).padStart(2,"0")}/${now.getFullYear()}`;
+  const todayDate = getTodayDateOnly();
+
+  // Conteggio totale delle lezioni "future o di oggi" (rispetto alla data, non all'ora)
+  const futureCount = events.filter(e => getDateOnly(e["Start Date"]) >= todayDate).length;
 
   const filtered = events.filter(e => {
     const isOnline = e.Description?.toLowerCase().includes("online");
@@ -582,7 +613,11 @@ function render() {
       currentSearch === "" ||
       e.Subject?.toLowerCase().includes(currentSearch.toLowerCase());
 
-    return matchFilter && matchSearch;
+    // Nasconde le lezioni passate (data < oggi) se il toggle è off.
+    // La lezione di oggi resta visibile per tutta la giornata.
+    const matchPast = showPast || getDateOnly(e["Start Date"]) >= todayDate;
+
+    return matchFilter && matchSearch && matchPast;
   });
 
   let html = "";
@@ -610,7 +645,13 @@ function render() {
 
   tbody.innerHTML = html || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">Nessuna lezione trovata.</td></tr>`;
 
-  document.getElementById("count").textContent = `${filtered.length} lezioni su ${events.length} totali`;
+  // Contatore: se le passate sono nascoste, mostra quante future su totale
+  const countEl = document.getElementById("count");
+  if (showPast) {
+    countEl.textContent = `${filtered.length} lezioni su ${events.length} totali`;
+  } else {
+    countEl.textContent = `${filtered.length} lezioni future su ${events.length} totali (${events.length - futureCount} già svolte)`;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -636,9 +677,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   applyInfoState();
 
-  document.querySelectorAll(".filters button").forEach(btn => {
+  document.querySelectorAll(".filters button[data-filter]").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".filters button[data-filter]").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       currentFilter = btn.dataset.filter;
       render();
@@ -647,6 +688,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("search").addEventListener("input", e => {
     currentSearch = e.target.value;
+    render();
+  });
+
+  // Toggle "Mostra passate" (indipendente dagli altri filtri)
+  const togglePastBtn = document.getElementById("toggle-past");
+  togglePastBtn.addEventListener("click", () => {
+    showPast = !showPast;
+    togglePastBtn.classList.toggle("on", showPast);
+    togglePastBtn.textContent = showPast ? "Nascondi passate" : "Mostra passate";
+    togglePastBtn.setAttribute("aria-pressed", showPast ? "true" : "false");
     render();
   });
 

@@ -170,7 +170,7 @@
   }
   .filters button:hover { border-color: var(--text-muted); }
   .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-  /* Toggle "Mostra passate": stile distinto, sempre presente ma con stato on/off */
+  /* Toggle "Mostra passate": stile distinto */
   .filters button.toggle-past {
     border-style: dashed;
     color: var(--text-muted);
@@ -536,16 +536,17 @@ function getGiorno(dateStr) {
   return ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][date.getDay()];
 }
 
-// Restituisce la data (senza ora) di una lezione, per confronti "giornalieri"
-function getDateOnly(dateStr) {
+// Confronto robusto su stringa YYYYMMDD (a prova di parsing)
+function toYYYYMMDD(dateStr) {
   const [d, m, y] = dateStr.split("/");
-  return new Date(`${y}-${m}-${d}T00:00:00`);
+  return `${y}${m}${d}`;
 }
-
-// Restituisce la data (senza ora) di oggi
-function getTodayDateOnly() {
+function todayYYYYMMDD() {
   const n = new Date();
-  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  const y = n.getFullYear();
+  const m = String(n.getMonth() + 1).padStart(2, "0");
+  const d = String(n.getDate()).padStart(2, "0");
+  return `${y}${m}${d}`;
 }
 
 const events = parseCSV(csvData).map(e => ({ ...e, giorno: getGiorno(e["Start Date"]) }));
@@ -590,16 +591,15 @@ function renderNext() {
 
 let currentFilter = "all";
 let currentSearch = "";
-let showPast = false; // <-- le passate sono nascoste di default
+let showPast = false; // le passate sono nascoste di default
 
 function render() {
   const tbody = document.getElementById("tbody");
   const now = new Date();
   const todayStr = `${String(now.getDate()).padStart(2,"0")}/${String(now.getMonth()+1).padStart(2,"0")}/${now.getFullYear()}`;
-  const todayDate = getTodayDateOnly();
+  const todayKey = todayYYYYMMDD();
 
-  // Conteggio totale delle lezioni "future o di oggi" (rispetto alla data, non all'ora)
-  const futureCount = events.filter(e => getDateOnly(e["Start Date"]) >= todayDate).length;
+  const futureCount = events.filter(e => toYYYYMMDD(e["Start Date"]) >= todayKey).length;
 
   const filtered = events.filter(e => {
     const isOnline = e.Description?.toLowerCase().includes("online");
@@ -613,9 +613,9 @@ function render() {
       currentSearch === "" ||
       e.Subject?.toLowerCase().includes(currentSearch.toLowerCase());
 
-    // Nasconde le lezioni passate (data < oggi) se il toggle è off.
+    // Nasconde le passate (data < oggi) se il toggle è off.
     // La lezione di oggi resta visibile per tutta la giornata.
-    const matchPast = showPast || getDateOnly(e["Start Date"]) >= todayDate;
+    const matchPast = showPast || toYYYYMMDD(e["Start Date"]) >= todayKey;
 
     return matchFilter && matchSearch && matchPast;
   });
@@ -645,7 +645,6 @@ function render() {
 
   tbody.innerHTML = html || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">Nessuna lezione trovata.</td></tr>`;
 
-  // Contatore: se le passate sono nascoste, mostra quante future su totale
   const countEl = document.getElementById("count");
   if (showPast) {
     countEl.textContent = `${filtered.length} lezioni su ${events.length} totali`;
@@ -691,7 +690,6 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   });
 
-  // Toggle "Mostra passate" (indipendente dagli altri filtri)
   const togglePastBtn = document.getElementById("toggle-past");
   togglePastBtn.addEventListener("click", () => {
     showPast = !showPast;

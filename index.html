@@ -154,6 +154,7 @@
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 14px;
+    align-items: center;
   }
   .filters button {
     padding: 8px 14px;
@@ -169,6 +170,17 @@
   }
   .filters button:hover { border-color: var(--text-muted); }
   .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  .filters button.toggle-past {
+    border-style: dashed;
+    color: var(--text-muted);
+  }
+  .filters button.toggle-past:hover { color: var(--text); }
+  .filters button.toggle-past.on {
+    background: rgba(96, 165, 250, 0.15);
+    border-color: var(--blue);
+    border-style: solid;
+    color: var(--blue);
+  }
   .filters input {
     padding: 8px 14px;
     border-radius: 999px;
@@ -337,7 +349,7 @@
 <body>
   <header>
     <h1>TFA Sostegno · Gruppo 1</h1>
-    <p class="sub">XI Ciclo · a.a. 2026/2027 · Secondaria II grado · UNICT</p>
+    <p class="sub">XI Ciclo · a.a. 2025/2026 · Secondaria II grado · UNICT</p>
   </header>
 
   <div class="info-box" id="info-box">
@@ -399,6 +411,7 @@
     <button data-filter="presenza">In presenza</button>
     <button data-filter="online">Online</button>
     <button data-filter="month">Questo mese</button>
+    <button id="toggle-past" class="toggle-past" type="button" aria-pressed="false">Mostra passate</button>
     <input type="text" id="search" placeholder="Cerca insegnamento...">
   </div>
 
@@ -425,7 +438,6 @@ M-PED/01 Pedagogia relazione di aiuto,05/10/2026,17:30,05/10/2026,20:00,Online,
 M-PED/03 Progettazione PDF/PEI,09/10/2026,15:00,09/10/2026,20:00,Presenza,
 M-PED/03 Progettazione PDF/PEI,10/10/2026,09:00,10/10/2026,14:00,Presenza,
 M-PED/01 Pedagogia relazione di aiuto,10/10/2026,14:30,10/10/2026,19:30,Presenza,
-M-PED/03 Pedagogia disabilità intellettiva,12/10/2026,15:00,12/10/2026,20:00,Online,
 M-PED/03 Progettazione PDF/PEI,13/10/2026,15:00,13/10/2026,20:00,Online,
 M-PED/03 Progettazione PDF/PEI,16/10/2026,15:00,16/10/2026,20:00,Presenza,
 M-PSI/04 Psicologia dello sviluppo,17/10/2026,09:00,17/10/2026,14:00,Presenza,
@@ -433,15 +445,17 @@ M-PED/03 Pedagogia disabilità intellettiva,17/10/2026,14:30,17/10/2026,19:30,Pr
 M-PED/03 Pedagogia disabilità intellettiva,23/10/2026,15:00,23/10/2026,20:00,Presenza,
 M-PED/03 Pedagogia disabilità intellettiva,24/10/2026,09:00,24/10/2026,14:00,Presenza,
 M-PED/03 Pedagogia disabilità intellettiva,24/10/2026,14:30,24/10/2026,19:30,Presenza,
-M-PSI/04 Modelli integrati di intervento,30/10/2026,15:00,30/10/2026,20:00,Presenza,
+M-PED/03 Pedagogia disabilità intellettiva,28/10/2026,15:00,28/10/2026,20:00,Online,
+M-PED/03 Pedagogia disabilità intellettiva,30/10/2026,15:00,30/10/2026,20:00,Presenza,
 M-PSI/04 Psicologia dello sviluppo,31/10/2026,09:00,31/10/2026,14:00,Presenza,
 M-PSI/04 Psicologia dello sviluppo,31/10/2026,14:30,31/10/2026,19:30,Presenza,
-M-PSI/04 Psicologia dello sviluppo,03/11/2026,15:00,03/11/2026,20:00,Online,
 M-PSI/04 Modelli integrati di intervento,04/11/2026,15:00,04/11/2026,20:00,Online,
+TIC,05/11/2026,15:00,05/11/2026,20:00,Online,
 M-PSI/04 Psicologia dello sviluppo,06/11/2026,15:00,06/11/2026,20:00,Presenza,
 M-PSI/04 Psicologia dello sviluppo,07/11/2026,09:00,07/11/2026,14:00,Presenza,
 M-PED/04 Didattica disabilità sensoriali,07/11/2026,14:30,07/11/2026,19:30,Presenza,
 M-PED/04 Didattica disabilità sensoriali,10/11/2026,15:00,10/11/2026,20:00,Online,
+TIC,12/11/2026,15:00,12/11/2026,20:00,Online,
 MED/39 Neuropsichiatria infantile,13/11/2026,15:00,13/11/2026,20:00,Presenza,
 M-PED/04 Didattica disabilità sensoriali,14/11/2026,09:00,14/11/2026,14:00,Presenza,
 M-PED/04 Didattica disabilità sensoriali,14/11/2026,14:30,14/11/2026,19:30,Presenza,
@@ -453,9 +467,11 @@ M-PED/04 Didattica disabilità sensoriali,27/11/2026,15:00,27/11/2026,20:00,Pres
 M-PED/04 Didattica disabilità sensoriali,28/11/2026,09:00,28/11/2026,14:00,Presenza,
 MED/39 Neuropsichiatria infantile,28/11/2026,14:30,28/11/2026,19:30,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,04/12/2026,15:00,04/12/2026,20:00,Presenza,
+TIC,03/12/2026,15:00,03/12/2026,20:00,Online,
 M-PED/03 Pedagogia speciale gruppo classe,05/12/2026,09:00,05/12/2026,14:00,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,05/12/2026,14:30,05/12/2026,19:30,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,09/12/2026,15:00,09/12/2026,20:00,Online,
+TIC,10/12/2026,15:00,10/12/2026,20:00,Online,
 M-PED/03 Pedagogia speciale gruppo classe,11/12/2026,15:00,11/12/2026,20:00,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,12/12/2026,09:00,12/12/2026,14:00,Presenza,
 M-PSI/04 Modelli integrati di intervento,12/12/2026,14:30,12/12/2026,19:30,Presenza,
@@ -474,14 +490,25 @@ Seminario,05/01/2027,15:00,05/01/2027,20:00,Online,
 M-PED/03 Didattica speciale metacognitivo,08/01/2027,15:00,08/01/2027,20:00,Presenza,
 M-PED/03 Didattica speciale metacognitivo,09/01/2027,09:00,09/01/2027,14:00,Presenza,
 Seminario,09/01/2027,14:30,09/01/2027,19:30,Presenza,
+TIC,13/01/2027,15:00,13/01/2027,20:00,Online,
 M-PED/03 Didattica speciale metacognitivo,15/01/2027,15:00,15/01/2027,20:00,Presenza,
 M-PED/03 Didattica speciale metacognitivo,16/01/2027,09:00,16/01/2027,14:00,Presenza,
 Seminario,16/01/2027,14:30,16/01/2027,19:30,Presenza,
+TIC,20/01/2027,15:00,20/01/2027,20:00,Online,
 M-PED/03 Didattica speciale metacognitivo,22/01/2027,15:00,22/01/2027,20:00,Presenza,
 Seminario,23/01/2027,09:00,23/01/2027,14:00,Presenza,
 Seminario,23/01/2027,14:30,23/01/2027,19:30,Presenza,
 Seminario,29/01/2027,15:00,29/01/2027,20:00,Presenza,
-Seminario,30/01/2027,09:00,30/01/2027,14:00,Presenza`;
+Seminario,30/01/2027,09:00,30/01/2027,14:00,Presenza,
+TIC,17/02/2027,15:00,17/02/2027,20:00,Online,
+TIC,24/02/2027,15:00,24/02/2027,20:00,Online,
+TIC,04/03/2027,15:00,04/03/2027,20:00,Online,
+TIC,11/03/2027,15:00,11/03/2027,20:00,Online,
+TIC,18/03/2027,15:00,18/03/2027,20:00,Online,
+TIC,01/04/2027,15:00,01/04/2027,20:00,Online,
+TIC,07/04/2027,15:00,07/04/2027,20:00,Online,
+TIC,09/04/2027,15:00,09/04/2027,20:00,Presenza,
+TIC,10/04/2027,09:00,10/04/2027,14:00,Presenza`;
 
 const MATERIE = {
   "M-PED/03": { label: "M-PED/03 · Pedagogia speciale", color: "#f59e0b" },
@@ -490,6 +517,7 @@ const MATERIE = {
   "MED/39":   { label: "MED/39 · Neuropsichiatria", color: "#ef4444" },
   "IUS/09":   { label: "IUS/09 · Legislazione", color: "#06b6d4" },
   "M-PED/01": { label: "M-PED/01 · Relazione di aiuto", color: "#10b981" },
+  "TIC":      { label: "TIC · Laboratorio", color: "#ea580c" },
   "Seminario": { label: "Seminario", color: "#64748b" },
 };
 
@@ -521,6 +549,18 @@ function getGiorno(dateStr) {
   const [d, m, y] = dateStr.split("/");
   const date = new Date(`${y}-${m}-${d}`);
   return ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][date.getDay()];
+}
+
+function toYYYYMMDD(dateStr) {
+  const [d, m, y] = dateStr.split("/");
+  return `${y}${m}${d}`;
+}
+function todayYYYYMMDD() {
+  const n = new Date();
+  const y = n.getFullYear();
+  const m = String(n.getMonth() + 1).padStart(2, "0");
+  const d = String(n.getDate()).padStart(2, "0");
+  return `${y}${m}${d}`;
 }
 
 const events = parseCSV(csvData).map(e => ({ ...e, giorno: getGiorno(e["Start Date"]) }));
@@ -565,11 +605,15 @@ function renderNext() {
 
 let currentFilter = "all";
 let currentSearch = "";
+let showPast = false;
 
 function render() {
   const tbody = document.getElementById("tbody");
   const now = new Date();
   const todayStr = `${String(now.getDate()).padStart(2,"0")}/${String(now.getMonth()+1).padStart(2,"0")}/${now.getFullYear()}`;
+  const todayKey = todayYYYYMMDD();
+
+  const futureCount = events.filter(e => toYYYYMMDD(e["Start Date"]) >= todayKey).length;
 
   const filtered = events.filter(e => {
     const isOnline = e.Description?.toLowerCase().includes("online");
@@ -583,7 +627,9 @@ function render() {
       currentSearch === "" ||
       e.Subject?.toLowerCase().includes(currentSearch.toLowerCase());
 
-    return matchFilter && matchSearch;
+    const matchPast = showPast || toYYYYMMDD(e["Start Date"]) >= todayKey;
+
+    return matchFilter && matchSearch && matchPast;
   });
 
   let html = "";
@@ -611,7 +657,12 @@ function render() {
 
   tbody.innerHTML = html || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">Nessuna lezione trovata.</td></tr>`;
 
-  document.getElementById("count").textContent = `${filtered.length} lezioni su ${events.length} totali`;
+  const countEl = document.getElementById("count");
+  if (showPast) {
+    countEl.textContent = `${filtered.length} lezioni su ${events.length} totali`;
+  } else {
+    countEl.textContent = `${filtered.length} lezioni future su ${events.length} totali (${events.length - futureCount} già svolte)`;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -637,9 +688,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   applyInfoState();
 
-  document.querySelectorAll(".filters button").forEach(btn => {
+  document.querySelectorAll(".filters button[data-filter]").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".filters button[data-filter]").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       currentFilter = btn.dataset.filter;
       render();
@@ -648,6 +699,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("search").addEventListener("input", e => {
     currentSearch = e.target.value;
+    render();
+  });
+
+  const togglePastBtn = document.getElementById("toggle-past");
+  togglePastBtn.addEventListener("click", () => {
+    showPast = !showPast;
+    togglePastBtn.classList.toggle("on", showPast);
+    togglePastBtn.textContent = showPast ? "Nascondi passate" : "Mostra passate";
+    togglePastBtn.setAttribute("aria-pressed", showPast ? "true" : "false");
     render();
   });
 

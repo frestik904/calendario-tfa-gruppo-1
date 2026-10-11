@@ -170,7 +170,6 @@
   }
   .filters button:hover { border-color: var(--text-muted); }
   .filters button.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-  /* Toggle "Mostra passate": stile distinto */
   .filters button.toggle-past {
     border-style: dashed;
     color: var(--text-muted);
@@ -451,10 +450,12 @@ M-PED/03 Pedagogia disabilità intellettiva,30/10/2026,15:00,30/10/2026,20:00,Pr
 M-PSI/04 Psicologia dello sviluppo,31/10/2026,09:00,31/10/2026,14:00,Presenza,
 M-PSI/04 Psicologia dello sviluppo,31/10/2026,14:30,31/10/2026,19:30,Presenza,
 M-PSI/04 Modelli integrati di intervento,04/11/2026,15:00,04/11/2026,20:00,Online,
+TIC,05/11/2026,15:00,05/11/2026,20:00,Online,
 M-PSI/04 Psicologia dello sviluppo,06/11/2026,15:00,06/11/2026,20:00,Presenza,
 M-PSI/04 Psicologia dello sviluppo,07/11/2026,09:00,07/11/2026,14:00,Presenza,
 M-PED/04 Didattica disabilità sensoriali,07/11/2026,14:30,07/11/2026,19:30,Presenza,
 M-PED/04 Didattica disabilità sensoriali,10/11/2026,15:00,10/11/2026,20:00,Online,
+TIC,12/11/2026,15:00,12/11/2026,20:00,Online,
 MED/39 Neuropsichiatria infantile,13/11/2026,15:00,13/11/2026,20:00,Presenza,
 M-PED/04 Didattica disabilità sensoriali,14/11/2026,09:00,14/11/2026,14:00,Presenza,
 M-PED/04 Didattica disabilità sensoriali,14/11/2026,14:30,14/11/2026,19:30,Presenza,
@@ -466,9 +467,11 @@ M-PED/04 Didattica disabilità sensoriali,27/11/2026,15:00,27/11/2026,20:00,Pres
 M-PED/04 Didattica disabilità sensoriali,28/11/2026,09:00,28/11/2026,14:00,Presenza,
 MED/39 Neuropsichiatria infantile,28/11/2026,14:30,28/11/2026,19:30,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,04/12/2026,15:00,04/12/2026,20:00,Presenza,
+TIC,03/12/2026,15:00,03/12/2026,20:00,Online,
 M-PED/03 Pedagogia speciale gruppo classe,05/12/2026,09:00,05/12/2026,14:00,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,05/12/2026,14:30,05/12/2026,19:30,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,09/12/2026,15:00,09/12/2026,20:00,Online,
+TIC,10/12/2026,15:00,10/12/2026,20:00,Online,
 M-PED/03 Pedagogia speciale gruppo classe,11/12/2026,15:00,11/12/2026,20:00,Presenza,
 M-PED/03 Pedagogia speciale gruppo classe,12/12/2026,09:00,12/12/2026,14:00,Presenza,
 M-PSI/04 Modelli integrati di intervento,12/12/2026,14:30,12/12/2026,19:30,Presenza,
@@ -487,14 +490,25 @@ Seminario,05/01/2027,15:00,05/01/2027,20:00,Online,
 M-PED/03 Didattica speciale metacognitivo,08/01/2027,15:00,08/01/2027,20:00,Presenza,
 M-PED/03 Didattica speciale metacognitivo,09/01/2027,09:00,09/01/2027,14:00,Presenza,
 Seminario,09/01/2027,14:30,09/01/2027,19:30,Presenza,
+TIC,13/01/2027,15:00,13/01/2027,20:00,Online,
 M-PED/03 Didattica speciale metacognitivo,15/01/2027,15:00,15/01/2027,20:00,Presenza,
 M-PED/03 Didattica speciale metacognitivo,16/01/2027,09:00,16/01/2027,14:00,Presenza,
 Seminario,16/01/2027,14:30,16/01/2027,19:30,Presenza,
+TIC,20/01/2027,15:00,20/01/2027,20:00,Online,
 M-PED/03 Didattica speciale metacognitivo,22/01/2027,15:00,22/01/2027,20:00,Presenza,
 Seminario,23/01/2027,09:00,23/01/2027,14:00,Presenza,
 Seminario,23/01/2027,14:30,23/01/2027,19:30,Presenza,
 Seminario,29/01/2027,15:00,29/01/2027,20:00,Presenza,
-Seminario,30/01/2027,09:00,30/01/2027,14:00,Presenza`;
+Seminario,30/01/2027,09:00,30/01/2027,14:00,Presenza,
+TIC,17/02/2027,15:00,17/02/2027,20:00,Online,
+TIC,24/02/2027,15:00,24/02/2027,20:00,Online,
+TIC,04/03/2027,15:00,04/03/2027,20:00,Online,
+TIC,11/03/2027,15:00,11/03/2027,20:00,Online,
+TIC,18/03/2027,15:00,18/03/2027,20:00,Online,
+TIC,01/04/2027,15:00,01/04/2027,20:00,Online,
+TIC,07/04/2027,15:00,07/04/2027,20:00,Online,
+TIC,09/04/2027,15:00,09/04/2027,20:00,Presenza,
+TIC,10/04/2027,09:00,10/04/2027,14:00,Presenza`;
 
 const MATERIE = {
   "M-PED/03": { label: "M-PED/03 · Pedagogia speciale", color: "#f59e0b" },
@@ -503,6 +517,7 @@ const MATERIE = {
   "MED/39":   { label: "MED/39 · Neuropsichiatria", color: "#ef4444" },
   "IUS/09":   { label: "IUS/09 · Legislazione", color: "#06b6d4" },
   "M-PED/01": { label: "M-PED/01 · Relazione di aiuto", color: "#10b981" },
+  "TIC":      { label: "TIC · Laboratorio", color: "#ea580c" },
   "Seminario": { label: "Seminario", color: "#64748b" },
 };
 
@@ -536,7 +551,6 @@ function getGiorno(dateStr) {
   return ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][date.getDay()];
 }
 
-// Confronto robusto su stringa YYYYMMDD (a prova di parsing)
 function toYYYYMMDD(dateStr) {
   const [d, m, y] = dateStr.split("/");
   return `${y}${m}${d}`;
@@ -591,7 +605,7 @@ function renderNext() {
 
 let currentFilter = "all";
 let currentSearch = "";
-let showPast = false; // le passate sono nascoste di default
+let showPast = false;
 
 function render() {
   const tbody = document.getElementById("tbody");
@@ -613,8 +627,6 @@ function render() {
       currentSearch === "" ||
       e.Subject?.toLowerCase().includes(currentSearch.toLowerCase());
 
-    // Nasconde le passate (data < oggi) se il toggle è off.
-    // La lezione di oggi resta visibile per tutta la giornata.
     const matchPast = showPast || toYYYYMMDD(e["Start Date"]) >= todayKey;
 
     return matchFilter && matchSearch && matchPast;
